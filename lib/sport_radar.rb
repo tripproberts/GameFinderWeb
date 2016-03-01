@@ -1,78 +1,166 @@
-class SportRadar
+module SportRadar
 
   SPORT_RADAR_KEY = ENV["SPORT_RADAR_KEY"]
 
   BASE_URL = "https://api.sportradar.us/"
 
-  SPORTS = {
-    cricket: {
-      string: "Cricket",
-      teams: "#{BASE_URL}cricket-t1/teams/hierarchy.json?api_key=#{ENV['SPORT_RADAR_CRICKET_KEY']}"
+  SPORTS = [
+    {
+      name: "MLB",
+      hierarchy: %w(leagues divisions teams),
+      competitor_name_location: %w(market name),
+      competitors_url: "#{BASE_URL}mlb-t5/league/hierarchy.json?api_key=#{ENV['SPORT_RADAR_MLB_KEY']}",
+      format: :json
     },
-    mlb: {
-      string: "MLB",
-      teams: "#{BASE_URL}mlb-t5/league/hierarchy.json?api_key=#{ENV['SPORT_RADAR_MLB_KEY']}"
+    {
+      name: "PGA",
+      hierarchy: %w(players),
+      competitor_name_location: %w(first_name last_name),
+      competitors_url: "#{BASE_URL}golf-t1/profiles/pga/#{Time.now.year}/players/profiles.json?api_key=#{ENV['SPORT_RADAR_GOLF_KEY']}",
+      format: :json
     },
-    golf: {
-      string: "PGA",
-      golfers: "#{BASE_URL}golf-t1/profiles/pga/#{Time.now.year}/players/profiles.json?api_key=#{ENV['SPORT_RADAR_GOLF_KEY']}"
+    {
+      name: "NASCAR Sprint Cup Series",
+      hierarchy: %w(drivers),
+      competitor_name_location: %w(full_name),
+      competitors_url: "#{BASE_URL}nascar-t3/sc/#{Time.now.year}/drivers/list.json?api_key=#{ENV['SPORT_RADAR_NASCAR_KEY']}",
+      format: :json
     },
-    nascar: {
-      string: "NASCAR Sprint Cup Series",
-      drivers: "#{BASE_URL}nascar-t3/sc/#{Time.now.year}/drivers/list.json?api_key=#{ENV['SPORT_RADAR_NASCAR_KEY']}"
+    {
+      name: "MMA",
+      hierarchy: %w(fighter),
+      competitor_name_location: %w(first_name nick_name last_name),
+      competitors_url: "#{BASE_URL}mma-t1/profiles.xml?api_key=#{ENV['SPORT_RADAR_MMA_KEY']}",
+      format: :xml
     },
-    mma: {
-      string: "MMA",
-      fighters: "#{BASE_URL}mma-t1/profiles.json?api_key=#{ENV['SPORT_RADAR_MMA_KEY']}"
+    {
+      name: "NBA",
+      hierarchy: %w(conferences divisions teams),
+      competitor_name_location: %w(market name),
+      competitors_url: "#{BASE_URL}nba-t3/league/hierarchy.json?api_key=#{ENV['SPORT_RADAR_NBA_KEY']}",
+      format: :json
     },
-    nba: {
-      string: "NBA",
-      teams: "#{BASE_URL}nba-t3/league/hierarchy.json?api_key=#{ENV['SPORT_RADAR_NBA_KEY']}"
+    {
+      name: "NCAA Men's Basketball",
+      hierarchy: %w(divisions conferences teams),
+      competitor_name_location: %w(market name),
+      competitors_url: "#{BASE_URL}ncaamb-t3/league/hierarchy.json?api_key=#{ENV['SPORT_RADAR_NCAAMB_KEY']}",
+      format: :json
     },
-    ncaamb: {
-      string: "NCAA Men's Basketball",
-      teams: "#{BASE_URL}ncaamb-t3/teams/league/hierarchy.json?api_key=#{ENV['SPORT_RADAR_NCAAMB_KEY']}"
+    {
+      name: "NCAA Football",
+      hierarchy: %w(conferences subdivisions teams),
+      competitor_name_location: %w(market name),
+      competitors_url: "#{BASE_URL}ncaafb-t1/teams/FBS/hierarchy.json?api_key=#{ENV['SPORT_RADAR_NCAAF_KEY']}",
+      format: :json
     },
-    ncaaf: {
-      string: "NCAA Football",
-      teams: "#{BASE_URL}ncaafb-t1/teams/FBS/hierarchy.json?api_key=#{ENV['SPORT_RADAR_NCAAF_KEY']}"
+    {
+      name: "NCAA Women's Basketball",
+      hierarchy: %w(divisions conferences teams),
+      competitor_name_location: %w(market name),
+      competitors_url: "#{BASE_URL}ncaawb-t3/league/hierarchy.json?api_key=#{ENV['SPORT_RADAR_NCAAWB_KEY']}",
+      format: :json
     },
-    ncaawb: {
-      string: "NCAA Women's Basketball",
-      teams: "#{BASE_URL}ncaawb-t3/league/hierarchy.json?api_key=#{ENV['SPORT_RADAR_NCAAWB_KEY']}"
+    {
+      name: "NHL",
+      hierarchy: %w(conferences divisions teams),
+      competitor_name_location: %w(market name),
+      competitors_url: "#{BASE_URL}nhl-t3/league/hierarchy.json?api_key=#{ENV['SPORT_RADAR_NHL_KEY']}",
+      format: :json
     },
-    rugby: {
-      string: "Rugby",
-      teams: "#{BASE_URL}rugby-t1/teams/#{Time.now.year}/hierarchy.json?api_key=#{ENV['SPORT_RADAR_RUGBY_KEY']}"
+    {
+      name: "NFL",
+      hierarchy: %w(conferences divisions teams),
+      competitor_name_location: %w(market name),
+      competitors_url: "#{BASE_URL}nfl-t1/teams/hierarchy.json?api_key=#{ENV['SPORT_RADAR_NFL_KEY']}",
+      format: :json
     },
-    nhl: {
-      string: "NHL",
-      teams: "#{BASE_URL}nhl-t3/league/hierarchy.json?api_key=#{ENV['SPORT_RADAR_NHL_KEY']}"
+    {
+      name: "Asian Soccer",
+      hierarchy: %w(category tournament_group tournament team),
+      competitor_name_location: %w(name),
+      competitors_url: "#{BASE_URL}soccer-t2/as/teams/hierarchy.xml?api_key=#{ENV['SPORT_RADAR_ASIA_SOCCER_KEY']}",
+      format: :xml
     },
-    nfl: {
-      string: "NFL",
-      teams: "#{BASE_URL}nfl-t1/teams/hierarchy.json?api_key=#{ENV['SPORT_RADAR_NFL_KEY']}"
+    {
+      name: "South American Soccer",
+      hierarchy: %w(category tournament_group tournament team),
+      competitor_name_location: %w(name),
+      competitors_url: "#{BASE_URL}soccer-t2/sa/teams/hierarchy.xml?api_key=#{ENV['SPORT_RADAR_SA_SOCCER_KEY']}",
+      format: :xml
     },
-    as_soccer: {
-      string: "Asian Soccer",
-      teams: "#{BASE_URL}soccer-t2/as/teams/hierarchy.json?api_key=#{ENV['SPORT_RADAR_ASIA_SOCCER_KEY']}"
+    {
+      name: "North American Soccer",
+      hierarchy: %w(category tournament_group tournament team),
+      competitor_name_location: %w(name),
+      competitors_url: "#{BASE_URL}soccer-t2/na/teams/hierarchy.xml?api_key=#{ENV['SPORT_RADAR_NA_SOCCER_KEY']}",
+      format: :xml
     },
-    sa_soccer: {
-      string: "South American Soccer",
-      teams: "#{BASE_URL}soccer-t2/sa/teams/hierarchy.json?api_key=#{ENV['SPORT_RADAR_SA_SOCCER_KEY']}"
+    {
+      name: "European Soccer",
+      hierarchy: %w(category tournament_group tournament team),
+      competitor_name_location: %w(name),
+      competitors_url: "#{BASE_URL}soccer-t2/eu/teams/hierarchy.xml?api_key=#{ENV['SPORT_RADAR_EUROPE_SOCCER_KEY']}",
+      format: :xml
     },
-    na_soccer: {
-      string: "North American Soccer",
-      teams: "#{BASE_URL}soccer-t2/na/teams/hierarchy.json?api_key=#{ENV['SPORT_RADAR_NA_SOCCER_KEY']}"
-    },
-    eu_soccer: {
-      string: "European Soccer",
-      teams: "#{BASE_URL}soccer-t2/eu/teams/hierarchy.json?api_key=#{ENV['SPORT_RADAR_EUROPE_SOCCER_KEY']}"
-    },
-    wnba: {
-      string: "WNBA",
-      teams: "#{BASE_URL}wnba-t3/league/hierarchy.json?api_key=#{ENV['SPORT_RADAR_WNBA_KEY']}"
+    {
+      name: "WNBA",
+      hierarchy: %w(conferences teams),
+      competitor_name_location: %w(market name),
+      competitors_url: "#{BASE_URL}wnba-t3/league/hierarchy.json?api_key=#{ENV['SPORT_RADAR_WNBA_KEY']}",
+      format: :json
     }
-  }
+  ]
+
+  def self.sports
+    SportRadar::SPORTS.map { |s| SportRadar::Sport.new(s) }
+  end
+
+  class Sport
+    attr_accessor :name, :competitors_url, :format, :hierarchy, :competitor_name_location
+    def initialize(args={})
+      args.each { |n, v| send("#{n}=", v) }
+    end
+    def competitors
+      uri = URI.parse(competitors_url)
+      http = Net::HTTP.new(uri.host, uri.port)
+      http.use_ssl = true
+      request = Net::HTTP::Get.new(uri.request_uri)
+      response = http.request(request)
+      if format == :json
+        json = JSON.parse response.body
+        i = 0
+        nodes = [json]
+        while i < hierarchy.count
+          newNodes = []
+          for node in nodes
+            newNode = if not node[hierarchy[i]].nil?
+                        if node[hierarchy[i]].is_a? Array
+                          node[hierarchy[i]]
+                        elsif node[hierarchy[i]].is_a? Hash
+                          [node[hierarchy[i]]]
+                        end
+                      elsif not node[hierarchy[i]].blank?
+                        [node]
+                      end
+            newNodes += newNode if newNode
+          end
+          nodes = newNodes
+          i += 1
+        end
+        nodes.map { |n| Competitor.new(name: competitor_name_location.map { |c| n[c] }.join(" ")) unless n.blank? }
+      elsif format == :xml
+        xml = Nokogiri::HTML response.body
+        xml.xpath("//#{hierarchy.last}").map { |l| Competitor.new(name: competitor_name_location.map { |c| l[c] }.join(" ")) }
+      end
+    end
+  end
+
+  class Competitor
+    attr_accessor :name
+    def initialize(args={})
+      args.each { |n, v| send("#{n}=", v) }
+    end
+  end
 
 end
