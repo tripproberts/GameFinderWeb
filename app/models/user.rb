@@ -5,6 +5,10 @@ class User < ActiveRecord::Base
           :omniauthable
   include DeviseTokenAuth::Concerns::User
 
+  has_many :preferences, class_name: "UserPreference"
+
+  accepts_nested_attributes_for :preferences
+
   def games
     {test: "test"}
   end

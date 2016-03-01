@@ -4,6 +4,10 @@ Rails.application.routes.draw do
 
   devise_for :users
 
+  namespace :user do
+    resources :preferences, only: [:update]
+  end
+
   resources :leagues, only: [:index] do
     member do
       get 'competitors'
@@ -20,6 +24,11 @@ Rails.application.routes.draw do
         get 'competitors'
       end
     end
+
+    namespace :user do
+      put 'preferences' => 'preferences#update'
+    end
+
   end
 
 end
