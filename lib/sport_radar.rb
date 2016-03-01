@@ -117,11 +117,20 @@ module SportRadar
   end
 
   class Sport
+
     attr_accessor :name, :competitors_url, :format, :hierarchy, :competitor_name_location
+
     def initialize(args={})
       args.each { |n, v| send("#{n}=", v) }
     end
+
     def competitors
+      @competitors ||= get_competitors
+    end
+
+    private
+
+    def get_competitors
       uri = URI.parse(competitors_url)
       http = Net::HTTP.new(uri.host, uri.port)
       http.use_ssl = true
@@ -148,7 +157,7 @@ module SportRadar
           nodes = newNodes
           i += 1
         end
-        nodes.map { |n| Competitor.new(name: competitor_name_location.map { |c| n[c] }.join(" ")) unless n.blank? }
+        nodes.map { |n| Competitor.new(name: competitor_name_location.map { |c| n[c] }.join(" ")) unless n.blank? }.compact
       elsif format == :xml
         xml = Nokogiri::HTML response.body
         xml.xpath("//#{hierarchy.last}").map { |l| Competitor.new(name: competitor_name_location.map { |c| l[c] }.join(" ")) }
