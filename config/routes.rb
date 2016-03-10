@@ -6,6 +6,7 @@ Rails.application.routes.draw do
 
   namespace :user do
     resources :preferences, only: [:update]
+    resources :televisions, only: [:create]
   end
 
   resources :leagues, only: [:index] do
@@ -26,7 +27,8 @@ Rails.application.routes.draw do
     end
 
     namespace :user do
-      put 'preferences' => 'preferences#update'
+      resources :preferences, only: [:update]
+      resources :televisions, only: [:create]
     end
 
   end

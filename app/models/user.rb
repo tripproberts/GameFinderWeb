@@ -6,10 +6,16 @@ class User < ActiveRecord::Base
   include DeviseTokenAuth::Concerns::User
 
   has_many :preferences, class_name: "UserPreference"
+  has_many :televisions
 
   accepts_nested_attributes_for :preferences
 
   def games
     {test: "test"}
   end
+
+  def television
+    televisions.first
+  end
+
 end
