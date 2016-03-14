@@ -16,6 +16,6 @@ class Api::User::TelevisionsController < ApplicationController
   end
 
   def television_params
-    params.require(:television).permit(:brand, :cable_company)
+    params.require(:television).permit(:brand, :cable_company, :name)
   end
 end

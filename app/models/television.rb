@@ -3,6 +3,7 @@ class Television < ActiveRecord::Base
 
   def as_json(options={})
     {
+      name: name,
       brand: brand,
       cable_company: cable_company
     }
