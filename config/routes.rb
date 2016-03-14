@@ -5,8 +5,9 @@ Rails.application.routes.draw do
   devise_for :users
 
   namespace :user do
-    resources :preferences, only: [:update]
+    put 'preferences' => 'preferences#update'
     resources :televisions, only: [:create]
+    resources :channels, only: [:create]
   end
 
   resources :leagues, only: [:index] do
@@ -29,6 +30,7 @@ Rails.application.routes.draw do
     namespace :user do
       put 'preferences' => 'preferences#update'
       resources :televisions, only: [:create]
+      resources :channels, only: [:create]
     end
 
   end
