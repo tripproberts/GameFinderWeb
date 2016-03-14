@@ -27,7 +27,7 @@ Rails.application.routes.draw do
     end
 
     namespace :user do
-      resources :preferences, only: [:update]
+      put 'preferences' => 'preferences#update'
       resources :televisions, only: [:create]
     end
 
