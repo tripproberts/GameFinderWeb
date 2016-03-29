@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
 
-  root to: 'games#index'
+  root to: 'user#games'
 
   devise_for :users
 
@@ -8,6 +8,7 @@ Rails.application.routes.draw do
     put 'preferences' => 'preferences#update'
     resources :televisions, only: [:create]
     resources :channels, only: [:create]
+    resources :games, only: [:index]
   end
 
   resources :leagues, only: [:index] do
@@ -19,8 +20,6 @@ Rails.application.routes.draw do
   namespace :api do
     mount_devise_token_auth_for 'User', at: 'users'
 
-    get '/games' => 'games#index'
-
     resources :leagues, only: [:index] do
       member do
         get 'competitors'
@@ -31,6 +30,7 @@ Rails.application.routes.draw do
       put 'preferences' => 'preferences#update'
       resources :televisions, only: [:create]
       resources :channels, only: [:create]
+      resources :games, only: [:index]
     end
 
   end
