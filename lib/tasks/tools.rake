@@ -3,7 +3,7 @@ namespace :db do
   task populate_leagues: :environment do
     require "#{Rails.root}/lib/sport_radar"
     SportRadar.sports.each do |s|
-      League.create!(name: s.name)
+      League.create!(remote_league_id: s.id, name: s.name)
     end
   end
 
@@ -13,7 +13,7 @@ namespace :db do
     SportRadar.sports.each do |s|
       l = League.find_by_name(s.name)
       s.competitors.each do |c|
-        Competitor.create!(league: l, name: c.name)
+        Competitor.create!(league: l, remote_competitor_id: c.id, name: c.name)
       end
     end
   end

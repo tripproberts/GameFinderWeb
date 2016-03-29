@@ -11,19 +11,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160329142910) do
+ActiveRecord::Schema.define(version: 20160329190832) do
 
   create_table "competitors", force: :cascade do |t|
     t.string   "name"
     t.integer  "league_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",           null: false
+    t.datetime "updated_at",           null: false
+    t.string   "remote_competitor_id"
   end
 
   create_table "leagues", force: :cascade do |t|
     t.string   "name"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",       null: false
+    t.datetime "updated_at",       null: false
+    t.string   "remote_league_id"
   end
 
   create_table "televisions", force: :cascade do |t|

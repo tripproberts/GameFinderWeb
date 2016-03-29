@@ -7,6 +7,7 @@ module SportRadar
   SPORTS = [
     {
       name: "MLB",
+      id: "2fa448bc-fc17-4d3d-be03-e60e080fdc26",
       schedule_url_pre: "#{BASE_URL}mlb-t5/games/",
       schedule_url_post: "/boxscore.json?api_key=#{ENV['SPORT_RADAR_MLB_KEY']}",
       hierarchy: %w(leagues divisions teams),
@@ -37,6 +38,7 @@ module SportRadar
     },
     {
       name: "NBA",
+      id: "4353138d-4c22-4396-95d8-5f587d2df25c",
       schedule_url_pre: "#{BASE_URL}nba-t3/games/",
       schedule_url_post: "/schedule.json?api_key=#{ENV['SPORT_RADAR_NBA_KEY']}",
       hierarchy: %w(conferences divisions teams),
@@ -67,6 +69,7 @@ module SportRadar
     },
     {
       name: "NHL",
+      id: "fd560107-a85b-4388-ab0d-655ad022aff7",
       schedule_url_pre: "#{BASE_URL}nhl-t3/games/",
       schedule_url_post: "/schedule.json?api_key=#{ENV['SPORT_RADAR_NHL_KEY']}",
       hierarchy: %w(conferences divisions teams),
@@ -127,12 +130,12 @@ module SportRadar
     sports.each do |s|
       games << s.games
     end
-    games
+    games.compact
   end
 
   class Sport
 
-    attr_accessor :name, :schedule_url_pre, :schedule_url_post, :competitors_url, :format, :hierarchy, :competitor_name_location
+    attr_accessor :id, :name, :schedule_url_pre, :schedule_url_post, :competitors_url, :format, :hierarchy, :competitor_name_location
 
     def initialize(args={})
       args.each { |n, v| send("#{n}=", v) }
@@ -149,8 +152,14 @@ module SportRadar
         http.use_ssl = true
         request = Net::HTTP::Get.new(uri.request_uri)
         response = http.request(request)
-        puts response.body
+        json = JSON.parse response.body
+        if json["games"]
+          return json["games"].map {|g| SportRadar::Game.new(g)}
+        else
+          return json["league"]["games"].map {|g| SportRadar::Game.new(g["game"])}
+        end
       end
+      nil
     end
 
     def competitors
@@ -186,7 +195,7 @@ module SportRadar
           nodes = newNodes
           i += 1
         end
-        nodes.map { |n| Competitor.new(name: competitor_name_location.map { |c| n[c] }.join(" ")) unless n.blank? }.compact
+        nodes.map { |n| Competitor.new(id: n["id"], name: competitor_name_location.map { |c| n[c] }.join(" ")) unless n.blank? }.compact
       elsif format == :xml
         xml = Nokogiri::HTML response.body
         xml.xpath("//#{hierarchy.last}").map { |l| Competitor.new(name: competitor_name_location.map { |c| l[c] }.join(" ")) }
@@ -195,8 +204,18 @@ module SportRadar
   end
 
   class Competitor
-    attr_accessor :name
+    attr_accessor :name, :id
     def initialize(args={})
+      args.each { |n, v| send("#{n}=", v) }
+    end
+  end
+
+  class Game
+    attr_accessor :id, :scheduled, :home, :away
+
+    def initialize(args={})
+      attrs = [:id, :scheduled, :home, :away]
+      args.slice!(*attrs)
       args.each { |n, v| send("#{n}=", v) }
     end
   end
