@@ -13,7 +13,7 @@ class User < ActiveRecord::Base
   accepts_nested_attributes_for :channels
 
   def games
-    {test: "test"}
+    { test: "test" }
   end
 
   def television

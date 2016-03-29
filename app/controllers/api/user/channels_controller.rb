@@ -10,6 +10,6 @@ class Api::User::ChannelsController < ApiController
   private
 
   def channel_params
-    params.permit(channels: [:channel_number, :channel_acronym])
+    params.permit(channels: [:channel_number, :channel_acronym, :television_id])
   end
 end
