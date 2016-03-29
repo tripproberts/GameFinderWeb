@@ -128,7 +128,7 @@ module SportRadar
   def self.todays_games
     games = []
     sports.each do |s|
-      games << s.games
+      games.concat s.games unless s.games.nil?
     end
     games.compact
   end
@@ -146,6 +146,16 @@ module SportRadar
     end
 
     def games
+      @games ||= get_games
+    end
+
+    def competitors
+      @competitors ||= get_competitors
+    end
+
+    private
+
+    def get_games
       if schedule_url_pre && schedule_url_post
         uri = URI.parse(schedule_url)
         http = Net::HTTP.new(uri.host, uri.port)
@@ -154,19 +164,13 @@ module SportRadar
         response = http.request(request)
         json = JSON.parse response.body
         if json["games"]
-          return json["games"].map {|g| SportRadar::Game.new(g)}
+          return json["games"].map {|g| SportRadar::Game.new(g.merge(league_id: json["league"]["id"]))}
         else
-          return json["league"]["games"].map {|g| SportRadar::Game.new(g["game"])}
+          return json["league"]["games"].map {|g| SportRadar::Game.new(g["game"].merge(league_id: json["league"]["id"]))}
         end
       end
       nil
     end
-
-    def competitors
-      @competitors ||= get_competitors
-    end
-
-    private
 
     def get_competitors
       uri = URI.parse(competitors_url)
@@ -211,10 +215,10 @@ module SportRadar
   end
 
   class Game
-    attr_accessor :id, :scheduled, :home, :away
+    attr_accessor :id, :scheduled, :home, :away, :broadcast, :league_id
 
     def initialize(args={})
-      attrs = [:id, :scheduled, :home, :away]
+      attrs = ["id", "scheduled", "home", "away", "broadcast", :league_id]
       args.slice!(*attrs)
       args.each { |n, v| send("#{n}=", v) }
     end

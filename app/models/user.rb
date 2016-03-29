@@ -13,11 +13,31 @@ class User < ActiveRecord::Base
   accepts_nested_attributes_for :channels
 
   def games
-    { test: "test" }
+    games = []
+    SportRadar.todays_games.each do |s|
+      competitor_1 = Competitor.find_by_remote_competitor_id(s.home["id"])
+      competitor_2 = Competitor.find_by_remote_competitor_id(s.away["id"])
+      league = League.find_by_remote_league_id(s.league_id)
+      games << UserGame.new(
+        user: self,
+        competitor_1: competitor_1,
+        competitor_2: competitor_2,
+        network: s.broadcast["network"],
+        start_time: Time.parse(s.scheduled),
+        league: league
+      )
+    end
+    games.compact.sort_by(&:score).reverse
   end
 
   def television
     televisions.first
+  end
+
+  def as_json(options={})
+    {
+      email: email
+    }
   end
 
 end
