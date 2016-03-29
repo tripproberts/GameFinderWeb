@@ -7,6 +7,8 @@ module SportRadar
   SPORTS = [
     {
       name: "MLB",
+      schedule_url_pre: "#{BASE_URL}mlb-t5/games/",
+      schedule_url_post: "/boxscore.json?api_key=#{ENV['SPORT_RADAR_MLB_KEY']}",
       hierarchy: %w(leagues divisions teams),
       competitor_name_location: %w(market name),
       competitors_url: "#{BASE_URL}mlb-t5/league/hierarchy.json?api_key=#{ENV['SPORT_RADAR_MLB_KEY']}",
@@ -35,6 +37,8 @@ module SportRadar
     },
     {
       name: "NBA",
+      schedule_url_pre: "#{BASE_URL}nba-t3/games/",
+      schedule_url_post: "/schedule.json?api_key=#{ENV['SPORT_RADAR_NBA_KEY']}",
       hierarchy: %w(conferences divisions teams),
       competitor_name_location: %w(market name),
       competitors_url: "#{BASE_URL}nba-t3/league/hierarchy.json?api_key=#{ENV['SPORT_RADAR_NBA_KEY']}",
@@ -63,6 +67,8 @@ module SportRadar
     },
     {
       name: "NHL",
+      schedule_url_pre: "#{BASE_URL}nhl-t3/games/",
+      schedule_url_post: "/schedule.json?api_key=#{ENV['SPORT_RADAR_NHL_KEY']}",
       hierarchy: %w(conferences divisions teams),
       competitor_name_location: %w(market name),
       competitors_url: "#{BASE_URL}nhl-t3/league/hierarchy.json?api_key=#{ENV['SPORT_RADAR_NHL_KEY']}",
@@ -116,12 +122,35 @@ module SportRadar
     SportRadar::SPORTS.map { |s| SportRadar::Sport.new(s) }
   end
 
+  def self.todays_games
+    games = []
+    sports.each do |s|
+      games << s.games
+    end
+    games
+  end
+
   class Sport
 
-    attr_accessor :name, :competitors_url, :format, :hierarchy, :competitor_name_location
+    attr_accessor :name, :schedule_url_pre, :schedule_url_post, :competitors_url, :format, :hierarchy, :competitor_name_location
 
     def initialize(args={})
       args.each { |n, v| send("#{n}=", v) }
+    end
+
+    def schedule_url
+      "#{schedule_url_pre}#{Time.current.year}/#{Time.current.month}/#{Time.current.day}#{schedule_url_post}"
+    end
+
+    def games
+      if schedule_url_pre && schedule_url_post
+        uri = URI.parse(schedule_url)
+        http = Net::HTTP.new(uri.host, uri.port)
+        http.use_ssl = true
+        request = Net::HTTP::Get.new(uri.request_uri)
+        response = http.request(request)
+        puts response.body
+      end
     end
 
     def competitors
