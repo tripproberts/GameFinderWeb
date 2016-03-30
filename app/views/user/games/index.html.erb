@@ -1,0 +1,7 @@
+<ul>
+  <% @games.each do |game| %>
+    <li><%= game.competitor_1.name %> vs <%= game.competitor_2.name %>: <%= game.score %></li>
+  <% end %>
+</ul>
+
+<%= link_to "Preferences", leagues_path %> | <%= link_to "Sign out", destroy_user_session_path, :method => :delete %>

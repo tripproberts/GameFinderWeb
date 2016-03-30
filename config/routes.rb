@@ -1,11 +1,12 @@
 Rails.application.routes.draw do
 
-  root to: 'user#games'
+  root to: 'user/games#index'
 
   devise_for :users
 
   namespace :user do
     put 'preferences' => 'preferences#update'
+    get 'preferences/edit' => 'preferences#edit'
     resources :televisions, only: [:create]
     resources :channels, only: [:create]
     resources :games, only: [:index]

@@ -1,0 +1,14 @@
+User League Preferences
+<% league_preferences = current_user.preferences.where(preference_type: "League") %>
+<%= form_for :user, url: user_preferences_path, method: :put do |f| %>
+  <% @leagues.each do |league| %>
+    <div>
+      <% previously_preferred = !league_preferences.where(preference_id: league.id).empty? %>
+      <%= hidden_field_tag 'user[preferences_attributes][][scale]', 2 %>
+      <%= hidden_field_tag 'user[preferences_attributes][][preference_type]', "League" %>
+      <%= hidden_field_tag 'user[preferences_attributes][][preference_id]', league.id %>
+      <%= check_box_tag 'user[preferences_attributes][][amount]', 1, previously_preferred %> <%= league.name %>
+    </div>
+  <% end %>
+  <%= f.submit "Update" %>
+<% end %>
