@@ -1,6 +1,10 @@
 class Api::User::TelevisionsController < ApplicationController
   before_action :set_television
 
+  def index
+    render json: current_user.televisions
+  end
+
   def create
     if @television.update_attributes(television_params)
       render json: current_user.televisions

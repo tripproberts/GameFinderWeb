@@ -1,6 +1,16 @@
 class Api::User::PreferencesController < ApiController
   before_filter :authenticate_user!
 
+  def index
+    if params[:type] == "league"
+      render json: current_user.preferences.where(preference_type: "League")
+    elsif params[:type] == "competitor"
+      render json: current_user.preferences.where(preference_type: "Competitor")
+    else
+      render json: current_user.preferences
+    end
+  end
+
   def update
     user_params[:preferences_attributes].each do |p|
       unless p[:amount].to_i == 0

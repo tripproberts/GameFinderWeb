@@ -1,6 +1,10 @@
 class Api::User::ChannelsController < ApiController
   before_filter :authenticate_user!
 
+  def index
+    render json: current_user.channels
+  end
+
   def create
     current_user.channels.build(channel_params[:channels])
     current_user.save!

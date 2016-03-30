@@ -29,8 +29,10 @@ Rails.application.routes.draw do
 
     namespace :user do
       put 'preferences' => 'preferences#update'
-      resources :televisions, only: [:create]
-      resources :channels, only: [:create]
+      get 'preferences' => 'preferences#index'
+      get 'preferences/:type' => 'preferences#index'
+      resources :televisions, only: [:create, :index]
+      resources :channels, only: [:create, :index]
       resources :games, only: [:index]
     end
 
