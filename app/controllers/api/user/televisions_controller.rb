@@ -2,7 +2,7 @@ class Api::User::TelevisionsController < ApplicationController
   before_action :set_television
 
   def index
-    render json: current_user.televisions
+    render json: current_user.televisions.where.not(id: nil)
   end
 
   def create
