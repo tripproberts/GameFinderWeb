@@ -26,7 +26,7 @@ class UserGame
     preferences = user.preferences
     preferred_teams = preferences.map {|p| Competitor.find(p.preference_id) if p.preference_type == "Competitor"}.compact
     sport_preference = preferences.where(preference: league)
-    sport_preference = sport_preference.empty? ? 0 : sport_preference[0]
+    sport_preference = sport_preference.empty? ? 0 : sport_preference[0].amount
 
     if preferred_teams.include? competitor_1 and preferred_teams.include? competitor_2
       @score = 100
