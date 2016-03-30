@@ -8,6 +8,7 @@ class Competitor < ActiveRecord::Base
     {
       id: id,
       league_id: league_id,
+      league_name: league.name,
       name: name
     }
   end
