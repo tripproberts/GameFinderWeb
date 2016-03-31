@@ -29,13 +29,13 @@ module SportRadar
       competitors_url: "#{BASE_URL}nascar-t3/sc/#{Time.now.year}/drivers/list.json?api_key=#{ENV['SPORT_RADAR_NASCAR_KEY']}",
       format: :json
     },
-    {
-      name: "MMA",
-      hierarchy: %w(fighter),
-      competitor_name_location: %w(first_name nick_name last_name),
-      competitors_url: "#{BASE_URL}mma-t1/profiles.xml?api_key=#{ENV['SPORT_RADAR_MMA_KEY']}",
-      format: :xml
-    },
+    #{
+    #  name: "MMA",
+    #  hierarchy: %w(fighter),
+    #  competitor_name_location: %w(first_name nick_name last_name),
+    #  competitors_url: "#{BASE_URL}mma-t1/profiles.xml?api_key=#{ENV['SPORT_RADAR_MMA_KEY']}",
+    #  format: :xml
+    #},
     {
       name: "NBA",
       id: "4353138d-4c22-4396-95d8-5f587d2df25c",
