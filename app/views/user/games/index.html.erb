@@ -1,6 +1,8 @@
 <ul>
   <% @games.each do |game| %>
-    <li><%= game.competitor_1.name %> vs <%= game.competitor_2.name %>: <%= game.score %></li>
+    <li>
+      <%= game.competitor_1.name %> vs <%= game.competitor_2.name %>: <%= game.score %> - <%= game.start_time.strftime("%l:%M %p %Z") %>
+    </li>
   <% end %>
 </ul>
 
