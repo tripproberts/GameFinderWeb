@@ -13,9 +13,15 @@ class Api::User::PreferencesController < ApiController
 
   def update
     user_params[:preferences_attributes].each do |p|
-      unless p[:amount].to_i == 0
-        preference = current_user.preferences.find_or_create_by(preference_type: p[:preference_type], preference_id: p[:preference_id])
-        preference.update!(amount: p[:amount], scale: p[:scale])
+      existing_preference = current_user.preferences.find_by(preference_type: p[:preference_type], preference_id: p[:preference_id])
+      if existing_preference
+        if p[:amount].to_i == 0
+          existing_preference.destroy!
+        else
+          existing_preference.update!(amount: p[:amount], scale: p[:scale])
+        end
+      else
+        current_user.preferences.create!(p) unless p[:amount].to_i == 0
       end
     end
     render json: current_user.preferences
