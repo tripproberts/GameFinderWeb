@@ -13,6 +13,11 @@ class Api::User::TelevisionsController < ApplicationController
     end
   end
 
+  def update
+    Television.find(params[:id]).update!(television_params)
+    render json: current_user.televisions.where.not(id: nil)
+  end
+
   private
 
   def set_television
@@ -20,6 +25,6 @@ class Api::User::TelevisionsController < ApplicationController
   end
 
   def television_params
-    params.require(:television).permit(:brand, :cable_company, :name)
+    params.require(:television).permit(:brand, :cable_company, :name, :selected)
   end
 end
