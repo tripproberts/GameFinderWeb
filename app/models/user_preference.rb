@@ -9,6 +9,8 @@ class UserPreference < ActiveRecord::Base
 
   validate :not_repeat_preference
 
+  before_destroy :destroy_associated_preferences
+
   def as_json(options={})
     {
       preference_id: preference_id,
@@ -19,6 +21,16 @@ class UserPreference < ActiveRecord::Base
   end
 
   private
+
+  def destroy_associated_preferences
+    if preference_type == "League"
+      user.preferences.each do |p|
+        if p.preference_type == "Competitor"
+          p.destroy! if p.preference.league == preference
+        end
+      end
+    end
+  end
 
   def not_repeat_preference
     same_preferences = UserPreference.where(user_id: user_id, preference: preference)
