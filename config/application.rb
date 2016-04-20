@@ -25,5 +25,6 @@ module GameFinder
 
     config.autoload_paths << Rails.root.join('lib')
     config.assets.paths << Rails.root.join("app", "assets", "fonts")
+    config.time_zone = 'Eastern Time (US & Canada)'
   end
 end
