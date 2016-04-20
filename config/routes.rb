@@ -7,7 +7,7 @@ Rails.application.routes.draw do
   namespace :user do
     put 'preferences' => 'preferences#update'
     get 'preferences/edit' => 'preferences#edit'
-    resources :televisions, only: [:create]
+    resources :televisions
     resources :channels, only: [:create]
     resources :games, only: [:index]
   end

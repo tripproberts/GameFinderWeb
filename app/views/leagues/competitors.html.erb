@@ -1,0 +1,14 @@
+<%= "#{@league.name} Preferences" %>
+<%= form_for :user, url: user_preferences_path, method: :put do |f| %>
+  <% @competitors.each_with_index do |c, i| %>
+    <div>
+      <% previous_preference = current_user.preferences.where(preference_type: "Competitor", preference_id: c.id) %>
+      <% previous_rating = previous_preference.empty? ? 0 : previous_preference[0].amount %>
+      <%= hidden_field_tag "user[preferences_attributes][#{i}][scale]", 2 %>
+      <%= hidden_field_tag "user[preferences_attributes][#{i}][preference_type]", "Competitor" %>
+      <%= hidden_field_tag "user[preferences_attributes][#{i}][preference_id]", c.id %>
+      <%= check_box_tag "user[preferences_attributes][#{i}][amount]", 1, previous_rating == 1 %> <%= c.name %>
+    </div>
+  <% end %>
+  <%= f.submit "Update" %>
+<% end %>

@@ -1,0 +1,21 @@
+Televisions <%= link_to "Add Television", new_user_television_path %>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Brand</th>
+      <th>Cable Company</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @televisions.each do |tv| %>
+      <tr>
+        <td><%= tv.name %></td>
+        <td><%= tv.brand %></td>
+        <td><%= tv.cable_company %></td>
+        <td><%= link_to "Edit", edit_user_television_path(tv) %> | <%= link_to 'Destroy',  user_television_path(tv),  method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

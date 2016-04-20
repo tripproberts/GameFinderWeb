@@ -1,0 +1,10 @@
+<%= form_for @television, url: user_television_path, method: :patch do |f| %>
+  <%= f.label :name %>
+  <%= f.text_field :name %>
+  <%= f.label :brand %>
+  <%= f.text_field :brand %>
+  <%= f.label :cable_company %>
+  <%= f.text_field :cable_company %>
+  <%= f.submit "Update", class: "btn btn-primary" %>
+<% end %>
+
