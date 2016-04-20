@@ -11,6 +11,11 @@ class Api::User::ChannelsController < ApiController
     render json: current_user.channels
   end
 
+  def destroy
+    UserChannel.find(params[:id]).destroy!
+    render json: current_user.channels
+  end
+
   private
 
   def channel_params

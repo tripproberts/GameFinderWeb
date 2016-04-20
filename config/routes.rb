@@ -31,8 +31,8 @@ Rails.application.routes.draw do
       put 'preferences' => 'preferences#update'
       get 'preferences' => 'preferences#index'
       get 'preferences/:type' => 'preferences#index'
-      resources :televisions, only: [:create, :index, :update]
-      resources :channels, only: [:create, :index]
+      resources :televisions, only: [:create, :index, :update, :destroy]
+      resources :channels, only: [:create, :index, :destroy]
       resources :games, only: [:index]
     end
 

@@ -18,6 +18,11 @@ class Api::User::TelevisionsController < ApplicationController
     render json: current_user.televisions.where.not(id: nil)
   end
 
+  def destroy
+    Television.find(params[:id]).destroy!
+    render json: current_user.televisions.where.not(id: nil)
+  end
+
   private
 
   def set_television
