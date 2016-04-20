@@ -27,12 +27,14 @@
               <%= link_to league.name, competitors_league_path(previous_preference[0].preference) %>
             <% end %>
           <td>
-            <%= radio_button_tag "user[preferences_attributes][#{i}][amount]", 0, previous_rating == 0 %> <%= 0 %>
-            <%= radio_button_tag "user[preferences_attributes][#{i}][amount]", 1, previous_rating == 1 %> <%= 1 %>
-            <%= radio_button_tag "user[preferences_attributes][#{i}][amount]", 2, previous_rating == 2 %> <%= 2 %>
-            <%= radio_button_tag "user[preferences_attributes][#{i}][amount]", 3, previous_rating == 3 %> <%= 3 %>
-            <%= radio_button_tag "user[preferences_attributes][#{i}][amount]", 4, previous_rating == 4 %> <%= 4 %>
-            <%= radio_button_tag "user[preferences_attributes][#{i}][amount]", 5, previous_rating == 5 %> <%= 5 %>
+            <select name="user[preferences_attributes][<%=i%>][amount]">
+              <option value="0" <%= "selected" if previous_rating == 0 %>>No Preference</option>
+              <option value="1" <%= "selected" if previous_rating == 1 %>>1</option>
+              <option value="2" <%= "selected" if previous_rating == 2 %>>2</option>
+              <option value="3" <%= "selected" if previous_rating == 3 %>>3</option>
+              <option value="4" <%= "selected" if previous_rating == 4 %>>4</option>
+              <option value="5" <%= "selected" if previous_rating == 5 %>>5</option>
+            </select>
           </td>
         </tr>
       <% end %>
