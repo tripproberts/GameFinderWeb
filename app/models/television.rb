@@ -1,6 +1,8 @@
 class Television < ActiveRecord::Base
   belongs_to :user
 
+  has_many :user_channels, dependent: :destroy
+
   after_update :ensure_only_one_selected
 
   def as_json(options={})
