@@ -1,9 +1,19 @@
-<ul>
-  <% @games.each do |game| %>
-    <li>
-      <%= game.competitor_1.name %> vs <%= game.competitor_2.name %>: <%= game.score %> - <%= game.start_time.strftime("%l:%M %p %Z") %>
-    </li>
-  <% end %>
-</ul>
-
-<%= link_to "Televisions", user_televisions_path %> | <%= link_to "Preferences", leagues_path %> | <%= link_to "Sign out", destroy_user_session_path, :method => :delete %>
+<% @games.each do |game| %>
+  <div class="panel panel-default">
+    <div class="panel-header">
+      <img src=<%="assets/#{game.competitor_1.name.downcase.gsub(" ", "_").gsub("&", "_").gsub(".", "_")}.jpg"%>>
+      <img src=<%="assets/#{game.competitor_2.name.downcase.gsub(" ", "_").gsub("&", "_")}.jpg"%>>
+    </div>
+    <div class="panel-body">
+      <strong><%= game.competitor_1.name %> vs. <%= game.competitor_2.name %></strong>
+      <br>
+      League: <%= game.league.name %>
+      <br>
+      Rating: <%= game.score %>
+      <br>
+      Start time: <%= game.start_time.strftime("%l:%M %p %Z") %>
+      <br>
+      Network: <%= game.network %>
+    </div>
+  </div>
+<% end %>

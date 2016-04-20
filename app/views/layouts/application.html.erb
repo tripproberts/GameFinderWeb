@@ -5,12 +5,30 @@
   <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
   <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
   <%= csrf_meta_tags %>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 </head>
-<body>
-  <p class="notice"><%= notice %></p>
-  <p class="alert"><%= alert %></p>
+<body <%= "style=padding-top:80px" unless devise_controller? %>>
+  <div class="container-fluid">
+    <% unless devise_controller? %>
+      <%= render 'shared/nav' %>
+    <% end %>
 
-<%= yield %>
+    <div class="col-xs-12">
+      <% if devise_controller? %>
+        <img class="logo" src="/assets/logo.png"/>
+      <% end %>
+      <% if notice %>
+        <div class="alert alert-info"><%= notice %></div>
+      <% end %>
+      <% if alert %>
+        <div class="alert alert-danger"><%= alert %></div>
+      <% end %>
+      <%= yield %>
+    </div>
 
+  </div>
+  <footer>
+    <p>GameFinder 2016</p>
+  </footer>
 </body>
 </html>

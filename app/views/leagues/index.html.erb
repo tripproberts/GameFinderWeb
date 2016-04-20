@@ -1,27 +1,45 @@
-League Preferences
+<div class="row">
+  <div class="col-xs-12">
+    <h2>League Preferences</h2>
+  </div>
+</div>
 <% league_preferences = current_user.preferences.where(preference_type: "League") %>
 <%= form_for :user, url: user_preferences_path, method: :put do |f| %>
-  <% @leagues.each_with_index do |league, i| %>
-    <div>
-      <% previous_preference = league_preferences.where(preference_id: league.id) %>
-      <% previous_rating = previous_preference.empty? ? 0 : previous_preference[0].amount %>
-      <%= hidden_field_tag "user[preferences_attributes][#{i}][scale]", 5 %>
-      <%= hidden_field_tag "user[preferences_attributes][#{i}][preference_type]", "League" %>
-      <%= hidden_field_tag "user[preferences_attributes][#{i}][preference_id]", league.id %>
-      <%= league.name %>
-      <%= radio_button_tag "user[preferences_attributes][#{i}][amount]", 0, previous_rating == 0 %> <%= 0 %>
-      <%= radio_button_tag "user[preferences_attributes][#{i}][amount]", 1, previous_rating == 1 %> <%= 1 %>
-      <%= radio_button_tag "user[preferences_attributes][#{i}][amount]", 2, previous_rating == 2 %> <%= 2 %>
-      <%= radio_button_tag "user[preferences_attributes][#{i}][amount]", 3, previous_rating == 3 %> <%= 3 %>
-      <%= radio_button_tag "user[preferences_attributes][#{i}][amount]", 4, previous_rating == 4 %> <%= 4 %>
-      <%= radio_button_tag "user[preferences_attributes][#{i}][amount]", 5, previous_rating == 5 %> <%= 5 %>
-    </div>
-  <% end %>
-  <%= f.submit "Update" %>
-<% end %>
-
-<% league_preferences.each do |lp| %>
-  <div>
-    <%= link_to "#{lp.preference.name} Preferences", competitors_league_path(lp.preference) %>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>League</th>
+        <th>Personal Preference</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @leagues.each_with_index do |league, i| %>
+        <tr>
+          <% previous_preference = league_preferences.where(preference_id: league.id) %>
+          <% previous_rating = previous_preference.empty? ? 0 : previous_preference[0].amount %>
+          <%= hidden_field_tag "user[preferences_attributes][#{i}][scale]", 5 %>
+          <%= hidden_field_tag "user[preferences_attributes][#{i}][preference_type]", "League" %>
+          <%= hidden_field_tag "user[preferences_attributes][#{i}][preference_id]", league.id %>
+          <td>
+            <% if previous_preference.empty? %>
+              <%= league.name %>
+            <% else %>
+              <%= link_to league.name, competitors_league_path(previous_preference[0].preference) %>
+            <% end %>
+          <td>
+            <%= radio_button_tag "user[preferences_attributes][#{i}][amount]", 0, previous_rating == 0 %> <%= 0 %>
+            <%= radio_button_tag "user[preferences_attributes][#{i}][amount]", 1, previous_rating == 1 %> <%= 1 %>
+            <%= radio_button_tag "user[preferences_attributes][#{i}][amount]", 2, previous_rating == 2 %> <%= 2 %>
+            <%= radio_button_tag "user[preferences_attributes][#{i}][amount]", 3, previous_rating == 3 %> <%= 3 %>
+            <%= radio_button_tag "user[preferences_attributes][#{i}][amount]", 4, previous_rating == 4 %> <%= 4 %>
+            <%= radio_button_tag "user[preferences_attributes][#{i}][amount]", 5, previous_rating == 5 %> <%= 5 %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+  <div class="form-group">
+    <%= f.submit "Update", class: "btn btn-primary" %>
   </div>
 <% end %>
+
